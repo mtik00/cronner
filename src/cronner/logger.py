@@ -4,7 +4,7 @@ This module creates and initializes a project-wide logger.
 
 Example::
 
-    >>> from SAMPLEPROJ.logger import get_logger()
+    >>> from cronner.logger import get_logger()
     >>> get_logger.debug("test")
     >>>
 """
@@ -28,11 +28,15 @@ SCREEN_LEVEL = logging.INFO
 
 
 def _init(logfile=None):
+    """Initializes the logging object.
+
+    :param str logfile: The path of the log file, if any
+    """
     global LOGGER
     settings = get_settings()
 
     if LOGGER is None:
-        LOGGER = logging.getLogger(settings["application-name"])
+        LOGGER = logging.getLogger("cronner")
         LOGGER.setLevel(logging.DEBUG)
 
         ch = logging.StreamHandler()
@@ -50,6 +54,7 @@ def _init(logfile=None):
 
 
 def get_logger(logfile=None):
+    """Retrieves the global logging object."""
     if LOGGER is None:
         _init(logfile)
 

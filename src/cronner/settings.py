@@ -1,6 +1,8 @@
 #!/usr/bin/env python2.7
 """
-This module holds the representation of the project settings.
+This module holds the representation of the project settings.  Project settings
+are stored in JSON format and read using
+`PersistentPineapple <https://github.com/JasonAUnrein/Persistent-Pineapple>`_.
 """
 
 # Imports ######################################################################
@@ -20,11 +22,16 @@ SETTINGS = None
 
 
 def _init(config_file):
+    """Initializes the settings object.
+
+    :param str logfile: The path of the log file, if any
+    """
     global SETTINGS
     SETTINGS = PersistentPineapple(config_file, woc=False, lofc=False)
 
 
 def get_settings(config_file=None):
+    """Retrieves the global settings object."""
     if SETTINGS is None:
         _init(config_file)
 

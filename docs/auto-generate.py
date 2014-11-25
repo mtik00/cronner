@@ -62,6 +62,7 @@ if __name__ == '__main__':
         remove_directory(args.docdir, remove_top=False)
 
     testdir = os.path.join(LIBDIR, "tests")
+    external_dir = os.path.join(LIBDIR, "external")
     docdir_root = os.path.split(args.docdir)[1]  # We'll skip this directory
     index = []  # Keep track of the files to put into the index
 
@@ -69,7 +70,7 @@ if __name__ == '__main__':
         module_dir = None
 
         # Don't auto-documents the package unit tests
-        if testdir in root:
+        if (testdir in root) or (external_dir in root):
             continue
 
         for fname in [x for x in files if x.endswith('.py')]:

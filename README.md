@@ -3,58 +3,75 @@
 Introduction
 ============
 
-Sample Python project.  I use this to create new projects.  You should change
-this section to whatever you need.
+This project is a simple replacement for the Windows Task Scheduler.  It's
+pure Python, so there's no reason you *couldn't* use it on Linux, but there
+isn't much of a point to that.
 
-Usage
-=====
+The basic principle is that cron jobs and settings are stored in a JSON text
+file.  This file is read, processed, and the results are stored each time you
+run the script.
 
-1.  Download/clone this repository
-2.  run "initialize.py" from the script directory
-3.  Answer all of the questions (you should have a Travis-CI account)
-
-When that is done, your project should be good to go.
-
-The alternative is to use an editor to replace all occurrences of these strings:
-
-* `PROJECTNAME`: The *normal* name of the project; spaces are OK
-* `cronner`: The directory name of the package; same as `PROJECTNAME`
-    except spaces will be replaced with underscores.  This is the *importable*
-    name.
-* `GHUSERNAME`: Your github user name
-* `GHPROJNAME`: The name of the project on github.  This is used for the URL
-    to the github page.  E.g. `https://github.com/GHUSERNAME/GHPROJNAME`
-* `FULLNAME`: Your full name.  E.g. "Firstname Lastname"
-* `mtik00`: Your Travis-CI user name
-* `CURRENTYEAR`: The current year; used for copyright information
-
-You'll also need to rename `src/cronner` and
-    `cronner/tests/test_cronner.py` accordingly.
+Previous runs and results are stored in an SQLite database (which we call the
+cache).  The script loads the cache and figures out whether or not a cron job
+should run based on the cron settings and the previous run.  There is currently
+no service that runs in the background.  You'll need to run the script each time
+you want to check the jobs.  In other words, "run every minute" jobs are probably
+not want you want to use this for (although there's nothing stopping you from
+doing so).
 
 Documentation
 =============
 
-HTML documentation is supported using Sphinx and pypandoc.  For
-this to work completely, you should have those two things already installed.
+Documentation is hosted on readthedocs: [cronner.readthedocs.org](http://cronner.readthedocs.org/en/latest/)
 
-Do generate HTML documentation:
+Usage
+=====
 
-* change to the `docs` folder
-* `make clean && make html`
+To run the script, use: `python -m cronner jobs.json cache.db`
+You can also create a script to do this for you, of course.
 
-This will build the documentation in the `_build\html` folder.  I use a special
-script to auto-generate the API documentation as well.  I suggest you take a
-look at the docs to see if you want that feature.  If you don't like it, you
-can remove the offending line from `docs\conf.py` (the script that does this is
-called `auto-generate.py`).  If you add documentation for specific modules,
-you'll need to add `noindex` entries where appropriate.
+The cache file will be created if it doesn't already exist.
 
-Documentation is also built and added to the release.
+JSON Format
+===========
 
-Building Releases
-=================
+The configuration settings are stored in JSON format.  There's one exception:
+we support comments in the form of `//`.  Everything after `//` will be ignored.
 
-You will find a script called `create-release.py` in the `scripts` folder.  You
-can run this script to build a pip-installable tarball.  The tarball will be
-placed in the `release` folder, and include your unit tests and the
-documentation.
+Cron job schedule parsing is provided through Josiah Carlson's *crontab* project.
+[See the project page for more information](https://github.com/josiahcarlson/parse-crontab).
+
+The file paths for "log-file" and "cache-file" can either be absolute paths or
+paths relative to where ever you run the script from.
+
+Here's a sample configuration file:
+
+    {
+        "cache-file": "cache.db",
+
+        // Logging options /////////////////////////////////////////////////////////
+        "log-file": "log.txt",
+        "log-file-mode": "a",
+        "log-file-level": "DEBUG",
+
+        // https://docs.python.org/2/library/logging.html#logrecord-attributes
+        "log-file-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
+        "screen-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
+        ////////////////////////////////////////////////////////////////////////////
+
+        "jobs": [
+            {
+                "description": "glacier backup: documents",
+                "cron-job": "@weekly",
+                "command": "glacier-sync.exe glacier z:/documents us-west-2 documents nckhs",
+                "working-dir": "c:/Program Files/FastGlacier"
+            },
+            {
+                "description": "ccleaner",
+                //           M   H   DA   MON    DOW     Y
+                "cron-job": "0   0    *    *     */2     *",
+                "command": "CCleaner.exe /AUTO",
+                "working-dir": "C:/Program Files/CCleaner"
+            }
+        ]
+    }

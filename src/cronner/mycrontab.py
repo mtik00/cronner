@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 """
-This script is used to do something really cool
+This package contains the objects representing a cron job.
 """
 
 # Imports ######################################################################
@@ -9,7 +9,6 @@ import md5
 import time
 from .external.crontab import CronTab as _CronTab
 from .cache import get_cache
-# from .persistent_pineapple import PersistentPineapple
 
 # Metadata #####################################################################
 __author__ = "Timothy McFadden"
@@ -22,6 +21,12 @@ DEBUG = False
 
 
 class CronTabItem(_CronTab):
+    """A cron tab schedule.
+
+    :param str cronschedule: The cron schedule.  E.g. ``@daily``,
+        ``0   0    *    *     */2     *``.  `See the project page for more
+        information <https://github.com/josiahcarlson/parse-crontab>`_.
+    """
     def __init__(self, cronschedule):
         self.__schedule = cronschedule
         super(CronTabItem, self).__init__(cronschedule)
@@ -31,6 +36,13 @@ class CronTabItem(_CronTab):
         return self.__schedule
 
     def next_time(self, asc=False):
+        """Get the local time of the next schedule time this job will run.
+
+        :param bool asc: Format the result with ``time.asctime()``
+
+        :returns: The epoch time or string representation of the epoch time that
+            the job should be run next
+        """
         _time = time.localtime(time.time() + self.next())
 
         if asc:
@@ -40,6 +52,13 @@ class CronTabItem(_CronTab):
 
 
 class CronTab(object):
+    """Represents a set of cron jobs, much like a crontab file.  The jobs will
+    be given an ID (md5 hash of description + command + schedule).  If the job
+    already exists in the cache, "last-run" and "last-run-result" will be read
+    from the cache.  If the job does not exist in the cache, it will be added.
+
+    :param list jobs: A list of dictionaries representing a job
+    """
     def __init__(self, jobs):
         cache = get_cache()
         self.jobs = []
