@@ -4,19 +4,19 @@ This module creates and initializes a project-wide logger.
 
 Example::
 
-    >>> from cronner.logger import get_logger()
+    >>> from SAMPLEPROJ.logger import get_logger()
     >>> get_logger.debug("test")
     >>>
 """
 # Imports ######################################################################
 from __future__ import print_function
-import os
 import logging
+from .settings import get_settings
 
 
 # Metadata #####################################################################
 __author__ = "Timothy McFadden"
-__creationDate__ = "11/25/2014"
+__date__ = "11/16/2014"
 __copyright__ = "Timothy McFadden, 2014"
 __license__ = "MIT"
 __version__ = "1.0.0dev"
@@ -24,38 +24,33 @@ __version__ = "1.0.0dev"
 
 # Globals ######################################################################
 LOGGER = None
-
-LOGFILE_DIR = "."
-LOGFILE_NAME = "cronner-log.txt"
-LOGFILE_FORMATTER = logging.Formatter('%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s')
-LOGFILE_LEVEL = logging.DEBUG
-
-SCREEN_FORMATTER = logging.Formatter('%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s')
 SCREEN_LEVEL = logging.INFO
 
 
-def _init():
+def _init(logfile=None):
     global LOGGER
+    settings = get_settings()
 
     if LOGGER is None:
-        LOGGER = logging.getLogger('cronner')
+        LOGGER = logging.getLogger(settings["application-name"])
         LOGGER.setLevel(logging.DEBUG)
 
         ch = logging.StreamHandler()
-        ch.setFormatter(SCREEN_FORMATTER)
+        screen_formatter = logging.Formatter(settings["screen-formatter"])
+        ch.setFormatter(screen_formatter)
         ch.setLevel(SCREEN_LEVEL)
         LOGGER.addHandler(ch)
 
-        if LOGFILE_NAME:
-            path = os.path.join(LOGFILE_DIR, LOGFILE_NAME)
-            fh = logging.FileHandler(path)
-            fh.setLevel(LOGFILE_LEVEL)
-            fh.setFormatter(SCREEN_FORMATTER)
+        if logfile:
+            logfile_formatter = logging.Formatter(settings["log-file-formatter"])
+            fh = logging.FileHandler(logfile, settings["log-file-mode"])
+            fh.setLevel(settings["log-file-level"])
+            fh.setFormatter(logfile_formatter)
             LOGGER.addHandler(fh)
 
 
-def get_logger():
+def get_logger(logfile=None):
     if LOGGER is None:
-        _init()
+        _init(logfile)
 
     return LOGGER
