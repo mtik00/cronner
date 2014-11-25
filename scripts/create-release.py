@@ -22,11 +22,18 @@ __author__ = "Timothy McFadden"
 __date__ = "09/02/2014"
 __copyright__ = "Timothy McFadden, 2014"
 __license__ = "GPLv2"
-__version__ = "0.03"
+__version__ = "0.04"
 
 # Globals ######################################################################
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 LIB_DIR = os.path.realpath(os.path.join(THIS_DIR, '..', 'src'))
+
+
+def package_version():
+    """Return the current version of our package."""
+    sys.path.insert(0, LIB_DIR)
+    from cronner import __version__
+    return __version__
 
 
 def remove_directory(top, remove_top=True, filter=None):
@@ -113,9 +120,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Read the version from our project
-    __version__ = None
-    with open(os.path.join(LIB_DIR, 'SAMPLEPROJ', '__init__.py'), 'rb') as f:
-        exec(f.read())
+    __version__ = package_version()
 
     remove_directory(release_dir, remove_top=False, filter=lambda x: "keep" not in x)
 
@@ -140,7 +145,7 @@ if __name__ == '__main__':
     shutil.move(source, dest)
 
     # remove left over dirs
-    for directory in ['SAMPLEPROJ.egg-info', 'dist', 'build', 'SAMPLEPROJ-%s' % __version__]:
+    for directory in ['cronner.egg-info', 'dist', 'build', 'cronner-%s' % __version__]:
         path = os.path.join(LIB_DIR, directory)
         if os.path.exists(path):
             remove_directory(path)

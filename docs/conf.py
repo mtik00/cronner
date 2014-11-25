@@ -7,11 +7,11 @@ import os
 import sys
 
 # Options ######################################################################
-PROJECT = u"SAMPLEPROJ"  # E.g. "some-test"
-PROJECT_LIBDIR_NAME = u"SAMPLEPROJ"  # E.g. "some_test"
+PROJECT = u"cronner"  # E.g. "some-test"
+PROJECT_LIBDIR_NAME = u"cronner"  # E.g. "some_test"
 PACKAGE_DIRNAME = "src"  # The root directory for the package
-USERNAME = u"FULLNAME"
-COPYRIGHT = u"CURRENTYEAR, %s" % USERNAME
+USERNAME = u"Timothy McFadden"
+COPYRIGHT = u"2014, %s" % USERNAME
 DOCTEST = True
 INCLUDE_SOURCE = False
 ################################################################################

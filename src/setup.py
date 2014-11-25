@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''SAMPLEPROJ package setup script.'''
+'''cronner package setup script.'''
 from __future__ import print_function
 import os
 import sys
@@ -9,26 +9,23 @@ except ImportError:
     print("ERROR: This package requires setuptools in order to install.", file=sys.stderr)
     sys.exit(1)
 
-THIS_DIR = os.path.abspath(os.path.dirname(__file__))
-VERSION_FILE = os.path.join(THIS_DIR, 'SAMPLEPROJ', '__init__.py')
-
 # Read the version from our project
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 PKG_DIR = os.path.join(THIS_DIR, 'src')
 sys.path.insert(0, PKG_DIR)
-from SAMPLEPROJ import __version__
+from cronner import __version__
 
 
 if __name__ == '__main__':
     setup(
-        name="SAMPLEPROJ",
+        name="cronner",
         version=__version__,
-        description="Data SAMPLEPROJ package",
-        author="<full name>",
-        url="https://github.com/<username>/SAMPLEPROJ",
+        description="cronner package",
+        author="Timothy McFadden",
+        url="https://github.com/mtik00/cronner",
         install_requires=[],
         packages=find_packages(),
-        package_data={"SAMPLEPROJ": ['.*']},
+        package_data={"cronner": ['.*']},
         zip_safe=True,
         include_package_data=True,
         test_suite="tests",

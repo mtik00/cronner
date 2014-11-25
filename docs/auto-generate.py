@@ -11,14 +11,14 @@ import argparse
 __author__ = "Timothy McFadden"
 __date__ = "09/05/2014"
 __copyright__ = "Timothy McFadden, 2014"
-__license__ = "GPLv2"
-__version__ = "0.03"
+__license__ = "MIT"
+__version__ = "0.04"
 
 
 # Globals ######################################################################
 
 # Base directory to search for modules
-LIBDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'src', 'SAMPLEPROJ'))
+LIBDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'src', 'cronner'))
 
 # Base directory to put auto-generated doc files.
 DOCDIR = os.path.realpath(os.path.join(os.path.dirname(__file__), 'rst', 'src'))
@@ -61,11 +61,16 @@ if __name__ == '__main__':
     if not args.noforce:
         remove_directory(args.docdir, remove_top=False)
 
+    testdir = os.path.join(LIBDIR, "tests")
     docdir_root = os.path.split(args.docdir)[1]  # We'll skip this directory
     index = []  # Keep track of the files to put into the index
 
     for root, dirs, files in os.walk(args.libdir):
         module_dir = None
+
+        # Don't auto-documents the package unit tests
+        if testdir in root:
+            continue
 
         for fname in [x for x in files if x.endswith('.py')]:
             docfile = None
