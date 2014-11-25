@@ -1,4 +1,6 @@
-cronner
-=======
+[![travis ci build state](https://travis-ci.org/USERNAME/SAMPLEPROJ.svg?branch=master)](https://travis-ci.org/USERNAME/SAMPLEPROJ)
 
-Yet another crontab-like replacement for Windows Task Scheduler
+Introduction
+============
+
+Sample Python project.  I use this to create new projects.
