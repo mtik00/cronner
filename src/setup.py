@@ -28,7 +28,7 @@ if __name__ == '__main__':
         package_data={"cronner": ['.*']},
         zip_safe=True,
         include_package_data=True,
-        test_suite="tests",
+        test_suite="cronner.tests",
 
         # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
         classifiers=[

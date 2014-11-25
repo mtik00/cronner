@@ -1,0 +1,22 @@
+{
+    "cache-file": "test-cache.db",
+
+    // Logging options /////////////////////////////////////////////////////////
+    "log-file": "test-log.txt",
+    "log-file-mode": "a",
+    "log-file-level": "DEBUG",
+
+    // https://docs.python.org/2/library/logging.html#logrecord-attributes
+    "log-file-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
+    "screen-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
+    ////////////////////////////////////////////////////////////////////////////
+
+    "jobs": [
+        {
+            "description": "test",
+            "cron-job": "@weekly",
+            "command": "dir",
+            "working-dir": "."
+        },
+    ]
+}

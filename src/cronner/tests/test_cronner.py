@@ -18,7 +18,7 @@ import cronner
 class Test(unittest.TestCase):
 
     def test_f1(self):
-        cronner.f1("testing")
+        print cronner.__version__
 
 
 if __name__ == '__main__':
