@@ -59,14 +59,14 @@ class Cache:
     def _create(self):
         """Create the tables needed to store the information."""
         self.cur.execute('''
-            CREATE TABLE history(
-                hash TEXT, description TEXT, time REAL, result INTEGER,
-                FOREIGN KEY(hash) REFERENCES jobs(hash))''')
-
-        self.cur.execute('''
             CREATE TABLE jobs(
                 hash TEXT NOT NULL UNIQUE PRIMARY KEY, description TEXT NOT NULL,
                 last_run REAL, next_run REAL, last_run_result INTEGER)''')
+
+        self.cur.execute('''
+            CREATE TABLE history(
+                hash TEXT, description TEXT, time REAL, result INTEGER,
+                FOREIGN KEY(hash) REFERENCES jobs(hash))''')
 
     def has(self, job):
         """Checks to see whether or not a job exists in the table.
