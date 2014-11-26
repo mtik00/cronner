@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
         # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
         classifiers=[
-            'Development Status :: 1 - Planning',
+            'Development Status :: 4 - Beta',
             'Environment :: Other Environment',
             'License :: OSI Approved :: MIT License',
             'Programming Language :: Python',
@@ -43,6 +43,8 @@ if __name__ == '__main__':
             'Environment :: Console',
             'Natural Language :: English',
             'Operating System :: OS Independent',
+            'Topic :: Office/Business :: Scheduling',
+            'Topic :: Software Development :: Libraries :: Python Modules'
         ],
 
         long_description=open(os.path.join(THIS_DIR, "README.rst"), 'r').read()
