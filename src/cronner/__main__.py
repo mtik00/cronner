@@ -12,11 +12,11 @@ from .executor import execute
 
 def init_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--history', help="Display job history", action="store_true", default=False)
-    parser.add_argument('--clear-last-run', help="Clears the last run of all jobs", action="store_true", default=False)
     parser.add_argument('--cache-file', help="Path to the cache file", required=True)
     parser.add_argument('--settings-file', help="Path to the settings file", required=True)
     parser.add_argument('--log-file', help="Path to the log file", required=True)
+    parser.add_argument('--history', help="Display job history", action="store_true", default=False)
+    parser.add_argument('--clear-last-run', help="Clears the last run of all jobs", action="store_true", default=False)
     return parser
 
 
@@ -82,9 +82,13 @@ if __name__ == '__main__':
     sys.path.insert(0, package_dir)
     from . import __version__
 
+    parser = init_parser()
     if len(sys.argv) == 1:
         print("running [{0}] version [{1}] from [{2}]".format(
               "cronner", __version__, this_directory))
+
+        parser.print_help()
+
         sys.exit()
 
     from .settings import get_settings
@@ -92,7 +96,6 @@ if __name__ == '__main__':
     from .cache import get_cache
     from .mycrontab import CronTab
 
-    parser = init_parser()
     args = parser.parse_args()
 
     settings = get_settings(args.settings_file)
