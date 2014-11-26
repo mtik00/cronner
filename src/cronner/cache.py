@@ -12,7 +12,7 @@ import sqlite3
 __author__ = "Timothy McFadden"
 __date__ = "11/16/2014"
 __license__ = "MIT"
-__version__ = "1.0.0dev"
+__version__ = "0.02"
 
 
 # Globals ######################################################################
@@ -48,6 +48,7 @@ class Cache:
 
         self.conn = sqlite3.connect(self.filename)
         self.cur = self.conn.cursor()
+        self.cur.execute("PRAGMA foreign_keys = ON")
 
     def __del__(self):
         """Commit the changes and close the connection."""
@@ -58,13 +59,14 @@ class Cache:
     def _create(self):
         """Create the tables needed to store the information."""
         self.cur.execute('''
-            CREATE TABLE history
-            (hash text, description text, time real, result integer)''')
+            CREATE TABLE history(
+                hash TEXT, description TEXT, time REAL, result INTEGER,
+                FOREIGN KEY(hash) REFERENCES jobs(hash))''')
 
         self.cur.execute('''
-            CREATE TABLE jobs
-            (hash text not null unique primary key, description text not null,
-             last_run real, next_run real, last_run_result integer)''')
+            CREATE TABLE jobs(
+                hash TEXT NOT NULL UNIQUE PRIMARY KEY, description TEXT NOT NULL,
+                last_run REAL, next_run REAL, last_run_result INTEGER)''')
 
     def has(self, job):
         """Checks to see whether or not a job exists in the table.
@@ -73,7 +75,7 @@ class Cache:
 
         :returns: True if the job exists, False otherwise
         """
-        return bool(self.get(job["id"]))
+        return bool(self.cur.execute('SELECT count(*) FROM jobs WHERE hash=?', (job["id"],)))
 
     def get(self, id):
         """Retrieves the job with the selected ID.
@@ -82,8 +84,7 @@ class Cache:
 
         :returns: The dictionary of the job if found, None otherwise
         """
-        cmd = "SELECT * FROM jobs WHERE hash=?"
-        self.cur.execute(cmd, (id,))
+        self.cur.execute("SELECT * FROM jobs WHERE hash=?", (id,))
         item = self.cur.fetchone()
         if item:
             return dict(zip(
@@ -99,8 +100,8 @@ class Cache:
 
         :returns: True
         """
-        cmd = "UPDATE jobs SET last_run=?,next_run=?,last_run_result=? WHERE hash=?"
-        self.cur.execute(cmd, (
+        self.cur.execute('''UPDATE jobs
+            SET last_run=?,next_run=?,last_run_result=? WHERE hash=?''', (
             job["last-run"], job["next-run"], job["last-run-result"], job["id"]))
 
     def add_job(self, job):
@@ -110,10 +111,8 @@ class Cache:
 
         :returns: True
         """
-        cmd = "INSERT INTO jobs(hash,description,last_run,next_run,last_run_result) VALUES(?,?,?,?,?)"
-        self.cur.execute(
-            cmd,
-            (job["id"], job["description"], job["last-run"], job["next-run"], job["last-run-result"]))
+        self.cur.execute("INSERT INTO jobs VALUES(?,?,?,?,?)", (
+            job["id"], job["description"], job["last-run"], job["next-run"], job["last-run-result"]))
 
         return True
 
@@ -124,9 +123,8 @@ class Cache:
 
         :returns: True
         """
-        cmd = "INSERT INTO history(hash,description,time,result) VALUES(?,?,?,?)"
         self.cur.execute(
-            cmd,
+            "INSERT INTO history VALUES(?,?,?,?)",
             (job["id"], job["description"], job["last-run"], job["last-run-result"]))
 
         return True
