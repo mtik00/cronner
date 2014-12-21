@@ -27,8 +27,19 @@ Documentation is hosted on readthedocs: [cronner.readthedocs.org](http://cronner
 Usage
 =====
 
-To run the script, use: `python -m cronner jobs.json cache.db`
-You can also create a script to do this for you, of course.
+To run the script, use: `python -m cronner --settings-file jobs.json --cache-file
+    cache.db --log-file log.txt`
+
+You can also create a script to do this for you, of course.  Here's a sample `go.bat`
+that you can run in the same directory as the data files:
+
+    @echo off
+    set cache=cache.db
+    set settings=config.json
+    set log=log.txt
+
+    @echo on
+    python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% %*
 
 The cache file will be created if it doesn't already exist.
 
