@@ -21,7 +21,10 @@ The project is hosted on GitHub at https://github.com/mtik00/cronner
 
 Install
 =======
-Download the `latest release tarball <https://github.com/mtik00/cronner/releases/latest>`_ and install with ``pip install <package>``.
+
+Releases are uploaded to pypi.  You can install the latest release with ``pip install cronner``.
+
+You can also download the `latest release tarball <https://github.com/mtik00/cronner/releases/latest>`_ and install with ``pip install <tarball>``.
 
 Usage
 =====
