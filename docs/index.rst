@@ -10,6 +10,7 @@ Contents:
    :maxdepth: 2
 
    rst/intro
+   rst/json
    rst/auto
 
 Indices and tables

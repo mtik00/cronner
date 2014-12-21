@@ -26,53 +26,19 @@ Download the `latest release tarball <https://github.com/mtik00/cronner/releases
 Usage
 =====
 
-To run the script, use: ``python -m cronner jobs.json cache.db``
-You can also create a script to do this for you, of course.
+To run the script, use: ``python -m cronner --settings-file jobs.json --cache-file cache.db --log-file log.txt``
+
+You can also create a script to do this for you, of course.  Here's a sample `go.bat`
+that you can run in the same directory as the data files:
+
+.. code:: bat
+
+    @echo off
+    set cache=cache.db
+    set settings=config.json
+    set log=log.txt
+
+    @echo on
+    python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% %*
 
 The cache file will be created if it doesn't already exist.
-
-JSON Format
-===========
-
-The configuration settings are stored in JSON format.  There's one exception:
-we support comments in the form of ``//``.  Everything after ``//`` will be ignored.
-
-Cron job schedule parsing is provided through Josiah Carlson's *crontab* project.
-`See the project page for more information <https://github.com/josiahcarlson/parse-crontab>`_.
-
-The file paths for "log-file" and "cache-file" can either be absolute paths or
-paths relative to where ever you run the script from.
-
-Here's a sample configuration file:
-
-.. code:: json
-
-    {
-        "cache-file": "cache.db",
-
-        // Logging options /////////////////////////////////////////////////////////
-        "log-file": "log.txt",
-        "log-file-mode": "a",
-        "log-file-level": "DEBUG",
-
-        // https://docs.python.org/2/library/logging.html#logrecord-attributes
-        "log-file-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
-        "screen-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
-        ////////////////////////////////////////////////////////////////////////////
-
-        "jobs": [
-            {
-                "description": "glacier backup: documents",
-                "cron-job": "@weekly",
-                "command": "glacier-sync.exe glacier z:/documents us-west-2 documents nckhs",
-                "working-dir": "c:/Program Files/FastGlacier"
-            },
-            {
-                "description": "ccleaner",
-                //           M   H   DA   MON    DOW     Y
-                "cron-job": "0   0    *    *     */2     *",
-                "command": "CCleaner.exe /AUTO",
-                "working-dir": "C:/Program Files/CCleaner"
-            }
-        ]
-    }
