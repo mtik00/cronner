@@ -11,7 +11,7 @@ from .executor import execute
 
 
 def init_parser():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog="cronner")
     parser.add_argument('--cache-file', help="Path to the cache file", required=True)
     parser.add_argument('--settings-file', help="Path to the settings file", required=True)
     parser.add_argument('--log-file', help="Path to the log file", required=True)

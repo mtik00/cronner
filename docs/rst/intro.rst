@@ -25,23 +25,3 @@ Install
 Releases are uploaded to pypi.  You can install the latest release with ``pip install cronner``.
 
 You can also download the `latest release tarball <https://github.com/mtik00/cronner/releases/latest>`_ and install with ``pip install <tarball>``.
-
-Usage
-=====
-
-To run the script, use: ``python -m cronner --settings-file jobs.json --cache-file cache.db --log-file log.txt``
-
-You can also create a script to do this for you, of course.  Here's a sample `go.bat`
-that you can run in the same directory as the data files:
-
-.. code:: bat
-
-    @echo off
-    set cache=cache.db
-    set settings=config.json
-    set log=log.txt
-
-    @echo on
-    python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% %*
-
-The cache file will be created if it doesn't already exist.
