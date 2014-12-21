@@ -53,7 +53,7 @@ installed):
 
 #.  Create a folder to contain your cronner files (e.g. ``C:\cronner-data``)
 #.  Create a file named ``go.bat`` in the folder with the text above
-#.  Create a sample ``config.json`` file
+#.  Create a sample ``config.json`` file (:ref:`json_example`)
 
 After that's complete, you can either run cronner manually from this directory,
 or you can add a Task Manager item to run it for you.  If you use Task Manager,

@@ -32,6 +32,8 @@ job can contain the following keys:
 * `command`: The command you want to run
 * `working-dir`: The directory you want to run the command in
 
+.. _json_example:
+
 Example
 -------
 
