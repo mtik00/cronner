@@ -26,12 +26,20 @@ jobs
 
 The jobs table structure contains 5 columns:
 
-* `hash` (TEXT NOT NULL UNIQUE): This contains a unique identifier for each job.  It's created from
+* `hash` (TEXT): This contains a unique identifier for each job.  It's created from
     the text contained in the JSON dictionary.
-* `description` (TEXT NOT NULL): This is from the ``description`` field in the JSON file.
+* `description` (TEXT): This is from the ``description`` field in the JSON file.
 * `last_run` (REAL): This is the local epoch time of the last time the job was run.
 * `next_run` (REAL): This is the local epoch time of the next time the job should be run.
 * `last_run_result` (INTEGER): This is the return code of the last-run job
+
+This is the code used to create the jobs table:
+
+.. code::
+
+    CREATE TABLE jobs(
+        hash TEXT NOT NULL UNIQUE PRIMARY KEY, description TEXT NOT NULL,
+        last_run REAL, next_run REAL, last_run_result INTEGER)
 
 history
 ~~~~~~~
@@ -45,3 +53,11 @@ The ``history`` table structure contains 4 columns:
     doesn't really need to be here; it's here mainly for debugging purposes.
 * `time` (REAL): This is the local epoch time when the job was run.
 * `result` (INTEGER): This is the return code of the last-run job
+
+This is the code used to create the history table:
+
+.. code::
+
+    CREATE TABLE history(
+        hash TEXT, description TEXT, time REAL, result INTEGER,
+        FOREIGN KEY(hash) REFERENCES jobs(hash))

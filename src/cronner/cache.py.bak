@@ -12,7 +12,7 @@ import sqlite3
 __author__ = "Timothy McFadden"
 __date__ = "11/16/2014"
 __license__ = "MIT"
-__version__ = "0.03"
+__version__ = "0.02"
 
 
 # Globals ######################################################################
