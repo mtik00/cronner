@@ -19,7 +19,24 @@ General Options
 * `log-file-level`: The string-based logging.level for the log file (e.g. "DEBUG")
 * `log-file-formatter`: See the Python documentation [1]_
 * `screen-formatter`: See the Python documentation [1]_
+* `vars`: Any variable expansions for the jobs (see the Variables section)
 * `jobs`: See below
+
+Variables
+---------
+Each job has the ability to include `variables` in the ``command``.  This allows
+you to set environment-variable-like parameters in a common section.  This is
+the ``vars`` section in the General Options.
+
+``vars`` is a dictionary, where the keys are the text to search for in command
+(w/o % symbols), and the values are what to replace the variable with.  It is
+strongly recommened that you use a constant character to mark the variable.  For
+example, surround the text with ``%`` (e.g. "%PYTHON%":
+"c:/Python27/bin/python.exe").  This will make the expansion more likely to
+succeed and not cause any problems.
+
+The variables are case-sensitive.  "%PYTHON%" is not the same as "%python%".
+
 
 Jobs
 ----
@@ -50,6 +67,11 @@ Here's a sample configuration file:
         "log-file-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
         "screen-formatter": "%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s - %(message)s",
         ////////////////////////////////////////////////////////////////////////////
+
+        // Variable Expansion //////////////////////////////////////////////////
+        "vars": {
+            "%PYTHON%": "C:/Python27/python2.7.exe"
+        },
 
         "jobs": [
             {

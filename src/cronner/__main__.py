@@ -5,8 +5,8 @@
 By default, it will print out the module name, version, and location.
 """
 from __future__ import print_function
-from os import path
 import sys
+from os import path
 from .executor import execute
 
 
@@ -30,13 +30,41 @@ def show_history(jobs):
         print("...next run: %s" % time.asctime(time.localtime(job["next-run"])))
 
 
-def process(jobs):
+def expand(items, vars):
+    """Expands all variables in command that are in the form of %VAR% in vars.
+
+    :param str list items: A list of strings you want to expand
+    :param dict vars: A dictionary where the keys are the variables, and the
+        values are the result of the expansion.
+    """
+    # This algorithm is a little inefficient since we loop through vars as
+    # opposed to something like `while %XXX% in command`.  This is so we don't
+    # mess around with any 'true' environment variables.  vars is probably going
+    # to be a small dictionary anyway, so it's not too bad.  This also makes
+    # a dead-simple loop exit, and we don't have to worry about users using
+    # some other marking character.
+    result = []
+    for item in items:
+        for variable, value in vars.items():
+            if variable in item:
+                item = item.replace(variable, value)
+
+        result.append(item)
+
+    return result
+
+
+def process(jobs, vars):
     """Perform each job command (if needed)."""
     logger.debug("=========================================== Starting process")
     for job in jobs:
         run = False
         item = cache.get(job["id"])
-        if item and (not item["last-run"]):
+
+        if item and (item["last-run-result"]):
+            print("<%s> failed last time; running it again" % item["description"])
+            run = True
+        elif item and (not item["last-run"]):
             print("<%s> never ran" % item["description"])
             run = True
         elif item and (time.time() > item["next-run"]):
@@ -46,12 +74,13 @@ def process(jobs):
         if run:
             print("running <%s>" % job["description"])
 
+            command, working_dir = expand((job["command"], job["working-dir"]), vars)
             returncode, stdout = execute(
-                job["command"], working_dir=job["working-dir"])
+                command, working_dir=working_dir)
 
             logger.debug(
-                "[%s] in [%s] returned: [%s]", job["command"],
-                job["working-dir"], stdout)
+                "[%s] in [%s] returned: [%i: %s]", command,
+                working_dir, returncode, stdout.strip())
 
             job["last-run"] = time.time()
             job["next-run"] = job["cron-job"].next_time()
@@ -108,4 +137,9 @@ if __name__ == '__main__':
     elif args.clear_last_run:
         clear_last_run(crontab.jobs, cache)
     else:
-        process(crontab.jobs)
+        try:
+            vars = settings.get("vars")
+        except:
+            vars = {}
+
+        process(crontab.jobs, vars)
