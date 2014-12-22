@@ -27,6 +27,7 @@ an example:
       --log-file LOG_FILE   Path to the log file
       --history             Display job history
       --clear-last-run      Clears the last run of all jobs
+      --echo                Echo stdout from command
 
 Batch File
 ----------

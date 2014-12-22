@@ -17,6 +17,7 @@ def init_parser():
     parser.add_argument('--log-file', help="Path to the log file", required=True)
     parser.add_argument('--history', help="Display job history", action="store_true", default=False)
     parser.add_argument('--clear-last-run', help="Clears the last run of all jobs", action="store_true", default=False)
+    parser.add_argument('--echo', help="Echo stdout from command", action="store_true", default=False)
     return parser
 
 
@@ -54,7 +55,7 @@ def expand(items, vars):
     return result
 
 
-def process(jobs, vars):
+def process(jobs, vars, echo=False):
     """Perform each job command (if needed)."""
     logger.debug("=========================================== Starting process")
     for job in jobs:
@@ -76,7 +77,7 @@ def process(jobs, vars):
 
             command, working_dir = expand((job["command"], job["working-dir"]), vars)
             returncode, stdout = execute(
-                command, working_dir=working_dir)
+                command, working_dir=working_dir, echo=echo)
 
             logger.debug(
                 "[%s] in [%s] returned: [%i: %s]", command,
@@ -142,4 +143,4 @@ if __name__ == '__main__':
         except:
             vars = {}
 
-        process(crontab.jobs, vars)
+        process(crontab.jobs, vars, args.echo)
