@@ -27,9 +27,9 @@ Documentation is hosted on readthedocs: [cronner.readthedocs.org](http://cronner
 Install
 =======
 
-Releases are uploaded to pypi.  You can install the latest release with ``pip install cronner``.
+~~Releases are uploaded to pypi.  You can install the latest release with ``pip install cronner``.~~
 
-You can also download the `latest release tarball <https://github.com/mtik00/cronner/releases/latest>`_ and install with ``pip install <tarball>``.
+You can also download the [latest release tarball](https://github.com/mtik00/cronner/releases/latest) and install with ``pip install <tarball>``.
 
 Usage
 =====
