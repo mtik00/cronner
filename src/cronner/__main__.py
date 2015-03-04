@@ -18,6 +18,7 @@ def init_parser():
     parser.add_argument('--history', help="Display job history", action="store_true", default=False)
     parser.add_argument('--clear-last-run', help="Clears the last run of all jobs", action="store_true", default=False)
     parser.add_argument('--echo', help="Echo stdout from command", action="store_true", default=False)
+    parser.add_argument('--sleep-after', help="Number of seconds to wait after jobs complete before sleeping (0=disabled)", default=0, type=float)
     return parser
 
 
@@ -144,3 +145,10 @@ if __name__ == '__main__':
             vars = {}
 
         process(crontab.jobs, vars, args.echo)
+
+        if args.sleep_after:
+            from .sleeper import sleep_pc
+
+            print("Sleeping after {0} seconds".format(args.sleep_after))
+            time.sleep(args.sleep_after)
+            sleep_pc()

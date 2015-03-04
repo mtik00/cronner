@@ -11,5 +11,6 @@ Contents:
    src/cronner/logger
    src/cronner/mycrontab
    src/cronner/settings
+   src/cronner/sleeper
    src/cronner
    src/cronner/__main__

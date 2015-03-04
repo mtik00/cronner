@@ -14,20 +14,24 @@ an example:
 
 .. code::
 
-    running [cronner] version [1.0.0dev] from [c:\Python27\Lib\site-packages\cronner]
-    usage: cronner [-h] --cache-file CACHE_FILE --settings-file SETTINGS_FILE
-                   --log-file LOG_FILE [--history] [--clear-last-run]
+  running [cronner] version [1.0.0dev] from [e:\dropbox\code\python\cronner\src\cronner]
+  usage: cronner [-h] --cache-file CACHE_FILE --settings-file SETTINGS_FILE
+                 --log-file LOG_FILE [--history] [--clear-last-run] [--echo]
+                 [--sleep-after SLEEP_AFTER]
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      --cache-file CACHE_FILE
-                            Path to the cache file
-      --settings-file SETTINGS_FILE
-                            Path to the settings file
-      --log-file LOG_FILE   Path to the log file
-      --history             Display job history
-      --clear-last-run      Clears the last run of all jobs
-      --echo                Echo stdout from command
+  optional arguments:
+    -h, --help            show this help message and exit
+    --cache-file CACHE_FILE
+                          Path to the cache file
+    --settings-file SETTINGS_FILE
+                          Path to the settings file
+    --log-file LOG_FILE   Path to the log file
+    --history             Display job history
+    --clear-last-run      Clears the last run of all jobs
+    --echo                Echo stdout from command
+    --sleep-after SLEEP_AFTER
+                          Number of seconds to wait after jobs complete before
+                          sleeping (0=disabled)
 
 Batch File
 ----------
@@ -38,13 +42,32 @@ inevitable Task Manager entry).  Here's a sample BATCH file.
 
 .. code:: bat
 
+    :: cronner BATCH file
+    :: You can use this BATCH file to run cronner from a directory of your choosing.
+    :: This directory should already be created, and contain at least *this* BATCH
+    :: file and your settings file.  The other files will be created as needed.
+    pushd "%~dp0"
     @echo off
+
+    :: set up variables to make the command more portable.
     set cache=cache.db
     set settings=config.json
     set log=log.txt
+    set sleep_time=30
 
-    @echo on
-    python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% %*
+    :: this command will run your config file and then sleep your computer.  The
+    :: "%*" at the end allows you to override the command line.  For example, if you
+    :: wanted to run cronner without sleeping, you call this script like so:
+    ::    go.bat --sleep-after 0
+    call python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% --echo --sleep-after %sleep_time% %*
+    popd
+
+    :: These lines will display a message in the DOS window after your computer has
+    :: woken from sleep.  It's probably good to keep these in here in case anything
+    :: goes wrong (otherwise you wouldn't see it).  Cronner will also tell you
+    :: the next scheduled time to run the task.
+    echo Welcome back
+    pause
 
 Recommendations
 ---------------
@@ -60,3 +83,7 @@ After that's complete, you can either run cronner manually from this directory,
 or you can add a Task Manager item to run it for you.  If you use Task Manager,
 don't forget set the working directory to the directory you put ``go.bat`` in.
 Otherwise this won't work (your custom settings file will never be read).
+
+Personally, I have the batch file mapped to a custom key.  I use that key to
+sleep my computer when I'm going to be away from it for a while (e.g. before
+I go to work).
