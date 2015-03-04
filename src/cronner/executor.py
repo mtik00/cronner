@@ -18,7 +18,7 @@ __license__ = "MIT"
 DEBUG = False
 
 
-def execute(command, shell=None, working_dir=".", echo=False):
+def execute(command, shell=None, working_dir=".", echo=False, echo_indent=0):
     """Execute a command on the command-line.
 
     :param str,list command: The command to run
@@ -27,6 +27,9 @@ def execute(command, shell=None, working_dir=".", echo=False):
         be false.  You can override this behavior by setting this parameter
         directly.
     :param str working_dir: The directory in which to run the command.
+    :param bool echo: Whether or not to print the output from the command to
+        stdout.
+    :param int echo_indent: Any number of spaces to indent the echo for clarity
 
     :returns: tuple: (return code, stdout)
 
@@ -44,11 +47,13 @@ def execute(command, shell=None, working_dir=".", echo=False):
         stdout = ""
         while p.poll() is None:
             line = p.stdout.readline()  # This blocks until it receives a newline.
-            print(line)
+            print(" " * echo_indent, line, end="")
             stdout += line
 
+        # Read any last bits
         line = p.stdout.read()
-        print(line)
+        print(" " * echo_indent, line, end="")
+        print()
         stdout += line
     else:
         stdout, _ = p.communicate()

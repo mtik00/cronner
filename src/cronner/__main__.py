@@ -78,7 +78,7 @@ def process(jobs, vars, echo=False):
 
             command, working_dir = expand((job["command"], job["working-dir"]), vars)
             returncode, stdout = execute(
-                command, working_dir=working_dir, echo=echo)
+                command, working_dir=working_dir, echo=echo, echo_indent=4)
 
             logger.debug(
                 "[%s] in [%s] returned: [%i: %s]", command,
