@@ -19,11 +19,14 @@ General Options
 * `log-file-level`: The string-based logging.level for the log file (e.g. "DEBUG")
 * `log-file-formatter`: See the Python documentation [1]_
 * `screen-formatter`: See the Python documentation [1]_
-* `vars`: Any variable expansions for the jobs (see the Variables section)
+* `vars`: Any variable expansions for the jobs (see :ref:`json_variables`)
 * `jobs`: See below
+
+.. _json_variables:
 
 Variables
 ---------
+
 Each job has the ability to include `variables` in the ``command``.  This allows
 you to set environment-variable-like parameters in a common section.  This is
 the ``vars`` section in the General Options.

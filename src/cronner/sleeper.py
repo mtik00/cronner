@@ -11,7 +11,7 @@ if 'win' in sys.platform:
     import win32api
     import win32security
 else:
-    raise NotImplementedError()
+    print("WARNING: cronner.sleeper not implemented on non-Windows OS")
 
 
 # Metadata #####################################################################

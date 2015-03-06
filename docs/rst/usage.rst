@@ -86,4 +86,14 @@ Otherwise this won't work (your custom settings file will never be read).
 
 Personally, I have the batch file mapped to a custom key.  I use that key to
 sleep my computer when I'm going to be away from it for a while (e.g. before
-I go to work).
+I go to work).  I simply hit the key and walk away.
+
+Windows Service
+---------------
+
+Someday I'd really like to add a Windows service.  It wouldn't be very
+difficult, as it's certainly been done before [1]_.  However, I actually enjoy
+the *active* running of the script and that I get feedback of what the script
+did when I power back on my PC after a sleep. **shrugs** YMMV
+
+.. [1] http://code.activestate.com/recipes/576451-how-to-create-a-windows-service-in-python/
