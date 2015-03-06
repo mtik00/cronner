@@ -1,5 +1,5 @@
 [![travis ci build state](https://travis-ci.org/mtik00/cronner.svg?branch=master)](https://travis-ci.org/mtik00/cronner)
-[![Coverage Status](https://coveralls.io/repos/mtik00/obfuscator/badge.png?branch=master)](https://coveralls.io/r/mtik00/obfuscator?branch=master)
+[![Coverage Status](https://coveralls.io/repos/mtik00/cronner/badge.svg)](https://coveralls.io/r/mtik00/cronner)
 
 Introduction
 ============
