@@ -19,6 +19,7 @@ def init_parser():
     parser.add_argument('--clear-last-run', help="Clears the last run of all jobs", action="store_true", default=False)
     parser.add_argument('--echo', help="Echo stdout from command", action="store_true", default=False)
     parser.add_argument('--sleep-after', help="Number of seconds to wait after jobs complete before sleeping (0=disabled)", default=0, type=float)
+    parser.add_argument('--interactive', help="Choose to run a job interactively", action="store_true", default=False)
     return parser
 
 
@@ -56,6 +57,71 @@ def expand(items, vars):
     return result
 
 
+def _execute_job(job, vars, echo=False):
+    print("running <%s>" % job["description"])
+
+    command, working_dir = expand((job["command"], job["working-dir"]), vars)
+    returncode, stdout = execute(
+        command, working_dir=working_dir, echo=echo, echo_indent=4)
+
+    logger.debug(
+        "[%s] in [%s] returned: [%i: %s]", command,
+        working_dir, returncode, stdout.strip())
+
+    job["last-run"] = time.time()
+    job["next-run"] = job["cron-job"].next_time()
+    job["last-run-result"] = returncode
+    cache.update(job)
+    cache.add_result(job)
+
+
+def interactive_process(jobs, vars, echo=False):
+    """Prompt the user for running jobs."""
+    logger.debug("=============================== Starting interactive process")
+
+    def menu(jobs_):
+        print("    {0:<40}{1:^20}{2:^20}".format("Description", "Next Run", "Last Run"))
+
+        for index, job in enumerate(jobs_):
+            item = cache.get(job["id"])
+
+            desc = "{0:2}: {1:<40}{2:^20}{3:^20}".format(
+                index + 1,
+                item["description"],
+                time.strftime("%m/%d/%y %H:%M", time.localtime(item["next-run"])) if item["next-run"] else "none",
+                time.strftime("%m/%d/%y %H:%M", time.localtime(item["last-run"])) if item["last-run"] else "none")
+            print(desc)
+
+        print()
+        print(
+            "Select a job to run, or 'a' for all.  You may enter a single item, or\n"
+            "multiple items must be separated by a space.  For example: 1 2 3")
+        selection = raw_input("Enter selection or press return to exit: ").strip()
+
+        if not selection:
+            jobs_ = None
+        elif selection and selection.lower() == "a":
+            jobs_ = list(jobs_)
+        elif selection:
+            selections = [int(x) - 1 for x in selection.split()]
+            if any([x > len(jobs_) for x in selections]):
+                raise ValueError("Invalid job selected")
+            jobs_ = [jobs_[x] for x in selections]
+        else:
+            jobs_ = None
+
+        return jobs_
+
+    sorted_jobs = sorted(jobs, key=lambda _job: _job["next-run"])
+    while True:
+        _jobs = menu(sorted_jobs[:])
+        if not _jobs:
+            break
+
+        for job in _jobs:
+            _execute_job(job, vars, echo)
+
+
 def process(jobs, vars, echo=False):
     """Perform each job command (if needed)."""
     logger.debug("=========================================== Starting process")
@@ -74,21 +140,7 @@ def process(jobs, vars, echo=False):
             run = True
 
         if run:
-            print("running <%s>" % job["description"])
-
-            command, working_dir = expand((job["command"], job["working-dir"]), vars)
-            returncode, stdout = execute(
-                command, working_dir=working_dir, echo=echo, echo_indent=4)
-
-            logger.debug(
-                "[%s] in [%s] returned: [%i: %s]", command,
-                working_dir, returncode, stdout.strip())
-
-            job["last-run"] = time.time()
-            job["next-run"] = job["cron-job"].next_time()
-            job["last-run-result"] = returncode
-            cache.update(job)
-            cache.add_result(job)
+            _execute_job(job, vars, echo)
         else:
             log = "not time to run <%s> (next run on %s)" % (
                 job["description"], job["cron-job"].next_time(asc=True))
@@ -144,7 +196,10 @@ if __name__ == '__main__':
         except:
             vars = {}
 
-        process(crontab.jobs, vars, args.echo)
+        if args.interactive:
+            interactive_process(crontab.jobs, vars, args.echo)
+        else:
+            process(crontab.jobs, vars, args.echo)
 
         if args.sleep_after:
             from .sleeper import sleep_pc

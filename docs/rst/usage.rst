@@ -33,8 +33,8 @@ an example:
                           Number of seconds to wait after jobs complete before
                           sleeping (0=disabled)
 
-Batch File
-----------
+Automatic Batch File
+--------------------
 
 You can run the ``python -m cronner`` command however you want.  However, you
 may want to create a BATCH file to make life easier (and keep less info in the
@@ -68,6 +68,33 @@ inevitable Task Manager entry).  Here's a sample BATCH file.
     :: the next scheduled time to run the task.
     echo Welcome back
     pause
+
+Interactive Batch File
+----------------------
+
+Cronner also has an *interactive* mode.  You can use this to force the running
+of certain jobs (e.g. you don't want to wait until the next time a job is
+scheduled to run).  Here's a sample BATCH file to run cronner in interactive
+mode.
+
+.. code:: bat
+
+    :: cronner BATCH file
+    :: You can use this BATCH file to run cronner from a directory of your choosing.
+    :: This directory should already be created, and contain at least *this* BATCH
+    :: file and your settings file.  The other files will be created as needed.
+    @echo off
+    pushd "%~dp0"
+
+    :: set up variables to make the command more portable.
+    set cache=cache.db
+    set settings=config.json
+    set log=log.txt
+
+    :: this command will run your config file and prompt you to manually run each
+    :: job.
+    call python -m cronner --cache-file %cache% --settings-file %settings% --log-file %log% --echo --interactive %*
+    popd
 
 Recommendations
 ---------------
