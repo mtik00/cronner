@@ -46,8 +46,8 @@ inevitable Task Manager entry).  Here's a sample BATCH file.
     :: You can use this BATCH file to run cronner from a directory of your choosing.
     :: This directory should already be created, and contain at least *this* BATCH
     :: file and your settings file.  The other files will be created as needed.
-    pushd "%~dp0"
     @echo off
+    pushd "%~dp0"
 
     :: set up variables to make the command more portable.
     set cache=cache.db
