@@ -14,24 +14,24 @@ an example:
 
 .. code::
 
-  running [cronner] version [1.0.0dev] from [e:\dropbox\code\python\cronner\src\cronner]
-  usage: cronner [-h] --cache-file CACHE_FILE --settings-file SETTINGS_FILE
-                 --log-file LOG_FILE [--history] [--clear-last-run] [--echo]
-                 [--sleep-after SLEEP_AFTER]
+    usage: cronner [-h] --cache-file CACHE_FILE --settings-file SETTINGS_FILE
+                   --log-file LOG_FILE [--history] [--clear-last-run] [--echo]
+                   [--sleep-after SLEEP_AFTER] [--interactive]
 
-  optional arguments:
-    -h, --help            show this help message and exit
-    --cache-file CACHE_FILE
-                          Path to the cache file
-    --settings-file SETTINGS_FILE
-                          Path to the settings file
-    --log-file LOG_FILE   Path to the log file
-    --history             Display job history
-    --clear-last-run      Clears the last run of all jobs
-    --echo                Echo stdout from command
-    --sleep-after SLEEP_AFTER
-                          Number of seconds to wait after jobs complete before
-                          sleeping (0=disabled)
+    optional arguments:
+      -h, --help            show this help message and exit
+      --cache-file CACHE_FILE
+                            Path to the cache file
+      --settings-file SETTINGS_FILE
+                            Path to the settings file
+      --log-file LOG_FILE   Path to the log file
+      --history             Display job history
+      --clear-last-run      Clears the last run of all jobs
+      --echo                Echo stdout from command
+      --sleep-after SLEEP_AFTER
+                            Number of seconds to wait after jobs complete before
+                            sleeping (0=disabled)
+      --interactive         Choose to run a job interactively
 
 Automatic Batch File
 --------------------

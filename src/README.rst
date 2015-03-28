@@ -4,8 +4,8 @@ Introduction
 ============
 
 This project is a simple replacement for the Windows Task Scheduler.
-It's pure Python, so there's no reason you *couldn't* use it on Linux,
-but there isn't much of a point to that.
+It's pure Python (except for ``sleep``), so there's no reason you *couldn't* use
+it on Linux, but there isn't much of a point to that.
 
 The basic principle is that cron jobs and settings are stored in a JSON
 text file. This file is read, processed, and the results are stored each
